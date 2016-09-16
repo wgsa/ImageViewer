@@ -94,6 +94,7 @@ public final class ImageViewerController: UIViewController, UIScrollViewDelegate
     public var dismissCompletionBlock: ((Void) -> Void)?
     
     /// INTERACTIONS
+    fileprivate let tapRecognizer = UITapGestureRecognizer()
     fileprivate let doubleTapRecognizer = UITapGestureRecognizer()
     fileprivate let panGestureRecognizer = UIPanGestureRecognizer()
     
@@ -145,6 +146,11 @@ public final class ImageViewerController: UIViewController, UIScrollViewDelegate
     }
     
     fileprivate func configureGestureRecognizers() {
+        
+        tapRecognizer.addTarget(self, action: #selector(ImageViewerController.scrollViewDidTap(_:)))
+        tapRecognizer.numberOfTapsRequired = 1
+        tapRecognizer.require(toFail: doubleTapRecognizer)
+        scrollView.addGestureRecognizer(tapRecognizer)
         
         doubleTapRecognizer.addTarget(self, action: #selector(ImageViewerController.scrollViewDidDoubleTap(_:)))
         doubleTapRecognizer.numberOfTapsRequired = 2
@@ -388,6 +394,10 @@ public final class ImageViewerController: UIViewController, UIScrollViewDelegate
     }
     
     // MARK: - Interaction Handling
+    
+    func scrollViewDidTap(_ recognizer: UITapGestureRecognizer){
+        close(self)
+    }
     
     func scrollViewDidDoubleTap(_ recognizer: UITapGestureRecognizer) {
         

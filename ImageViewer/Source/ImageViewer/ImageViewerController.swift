@@ -166,7 +166,11 @@ public final class ImageViewerController: UIViewController, UIScrollViewDelegate
         
         imageView.frame = parentViewFrameInOurCoordinateSystem
         imageView.contentMode = .scaleAspectFit
-        imageView.image = screenshotFromView(displacedView)
+        //imageView.image = screenshotFromView(displacedView)
+        //Our imageProvider has the image locally and can therefore add it immediately
+        self.imageProvider.provideImage { [weak self] image in
+            self?.imageView.image = image
+        }
     }
     
     fileprivate func configureScrollView() {

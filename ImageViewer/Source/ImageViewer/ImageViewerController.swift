@@ -79,19 +79,19 @@ public final class ImageViewerController: UIViewController, UIScrollViewDelegate
     /// LIFE CYCLE BLOCKS
     
     /// Executed right before the image animation into its final position starts.
-    public var showInitiationBlock: ((Void) -> Void)?
+    public var showInitiationBlock: (() -> Void)?
     /// Executed as the last step after all the show animations.
-    public var showCompletionBlock: ((Void) -> Void)?
+    public var showCompletionBlock: (() -> Void)?
     /// Executed as the first step before the button's close action starts.
-    public var closeButtonActionInitiationBlock: ((Void) -> Void)?
+    public var closeButtonActionInitiationBlock: (() -> Void)?
     /// Executed as the last step for close button's close action.
-    public var closeButtonActionCompletionBlock: ((Void) -> Void)?
+    public var closeButtonActionCompletionBlock: (() -> Void)?
     /// Executed as the first step for swipe to dismiss action.
-    public var swipeToDismissInitiationBlock: ((Void) -> Void)?
+    public var swipeToDismissInitiationBlock: (() -> Void)?
     /// Executed as the last step for swipe to dismiss action.
-    public var swipeToDismissCompletionBlock: ((Void) -> Void)?
+    public var swipeToDismissCompletionBlock: (() -> Void)?
     /// Executed as the last step when the ImageViewer is dismissed (either via the close button, or swipe)
-    public var dismissCompletionBlock: ((Void) -> Void)?
+    public var dismissCompletionBlock: (() -> Void)?
     
     /// INTERACTIONS
     fileprivate let tapRecognizer = UITapGestureRecognizer()
@@ -239,11 +239,11 @@ public final class ImageViewerController: UIViewController, UIScrollViewDelegate
     
     // MARK: - Animations
     
-    func close(_ sender: AnyObject) {
+    @objc func close(_ sender: AnyObject) {
         presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
-    func rotate() {
+    @objc func rotate() {
         guard UIDevice.current.orientation.isFlat == false &&
             isAnimating == false else { return }
         
@@ -399,11 +399,11 @@ public final class ImageViewerController: UIViewController, UIScrollViewDelegate
     
     // MARK: - Interaction Handling
     
-    func scrollViewDidTap(_ recognizer: UITapGestureRecognizer){
+    @objc func scrollViewDidTap(_ recognizer: UITapGestureRecognizer){
         close(self)
     }
     
-    func scrollViewDidDoubleTap(_ recognizer: UITapGestureRecognizer) {
+    @objc func scrollViewDidDoubleTap(_ recognizer: UITapGestureRecognizer) {
         
         let touchPoint = recognizer.location(ofTouch: 0, in: imageView)
         
@@ -426,7 +426,7 @@ public final class ImageViewerController: UIViewController, UIScrollViewDelegate
         }
     }
     
-    func scrollViewDidPan(_ recognizer: UIPanGestureRecognizer) {
+    @objc func scrollViewDidPan(_ recognizer: UIPanGestureRecognizer) {
         
         guard scrollView.zoomScale == scrollView.minimumZoomScale else { return }
         

@@ -204,7 +204,7 @@ final class ImageViewController: UIViewController, UIScrollViewDelegate, UIGestu
         return !fadeInHandler.wasPresented(self.index) && self.index != self.startIndex
     }
 
-    func adjustImageViewForRotation() {
+    @objc func adjustImageViewForRotation() {
         
         guard self.imageView.bounds != CGRect.zero else { return }
         
@@ -275,7 +275,7 @@ final class ImageViewController: UIViewController, UIScrollViewDelegate, UIGestu
         self.delegate?.imageViewControllerDidSingleTap(self)
     }
     
-    func scrollViewDidDoubleTap(_ recognizer: UITapGestureRecognizer) {
+    @objc func scrollViewDidDoubleTap(_ recognizer: UITapGestureRecognizer) {
         
         let touchPoint = recognizer.location(ofTouch: 0, in: imageView)
         let aspectFillScale = aspectFillZoomScale(forBoundingSize: rotationAdjustedBounds().size, contentSize: imageView.bounds.size)
@@ -300,7 +300,7 @@ final class ImageViewController: UIViewController, UIScrollViewDelegate, UIGestu
         imageView.center = contentCenter(forBoundingSize: scrollView.bounds.size, contentSize: scrollView.contentSize)
     }
     
-    func scrollViewDidSwipeToDismiss(_ recognizer: UIPanGestureRecognizer) {
+    @objc func scrollViewDidSwipeToDismiss(_ recognizer: UIPanGestureRecognizer) {
         
         guard imageView.image != nil else {  return } // a swipe gesture with empty scrollview doesn't make sense
         guard scrollView.zoomScale == scrollView.minimumZoomScale else {  return } // UX decision

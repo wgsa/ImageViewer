@@ -50,7 +50,7 @@ final class GalleryPresentTransition: NSObject, UIViewControllerAnimatedTransiti
         }
     }
 
-    fileprivate func animateDisplacedView(_ transitionContext: UIViewControllerContextTransitioning, onComplete: ((Void) -> Void)? = nil) {
+    fileprivate func animateDisplacedView(_ transitionContext: UIViewControllerContextTransitioning, onComplete: (() -> Void)? = nil) {
         /// Get the temporary container view that facilitates all the animations
         let transitionContainerView = transitionContext.containerView
 

@@ -151,7 +151,7 @@ final public class GalleryViewController : UIPageViewController, UIViewControlle
     
     // MARK: - Animations
     
-    func rotate() {
+    @objc func rotate() {
         
         /// If the app supports rotation on global level, we don't need to rotate here manually because the rotation
         /// of key Window will rotate all app's content with it via affine transform and from the perspective of the
@@ -375,12 +375,12 @@ final public class GalleryViewController : UIPageViewController, UIViewControlle
         closeWithAnimation(programaticallyClosedCompletion)
     }
     
-    func interactiveClose() {
+    @objc func interactiveClose() {
         
         closeWithAnimation(closedCompletion)
      }
 
-    func seeAll() {
+    @objc func seeAll() {
         let seeAllController = ThumbnailsViewController(imageProvider: self.imageProvider)
         if let closeButton = closeButton {
             let seeAllCloseButton = UIButton(frame: CGRect(origin: CGPoint.zero, size: closeButton.bounds.size))

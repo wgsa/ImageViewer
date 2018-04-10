@@ -33,7 +33,7 @@ public enum GalleryConfigurationItem {
     case backgroundColor(UIColor)
 }
 
-func defaultGalleryConfiguration() -> GalleryConfiguration {
+public func defaultGalleryConfiguration() -> GalleryConfiguration {
 
     let dividerWidth = GalleryConfigurationItem.imageDividerWidth(10)
     let spinnerColor = GalleryConfigurationItem.spinnerColor(UIColor.white)

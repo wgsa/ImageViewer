@@ -19,7 +19,7 @@ public typealias GalleryConfiguration = [GalleryConfigurationItem]
 public enum GalleryConfigurationItem {
 
     case imageDividerWidth(CGFloat)
-    case spinnerStyle(UIActivityIndicatorViewStyle)
+    case spinnerStyle(UIActivityIndicatorView.Style)
     case spinnerColor(UIColor)
     case closeButton(UIButton)
     case seeAllButton(UIButton)
@@ -37,11 +37,11 @@ public func defaultGalleryConfiguration() -> GalleryConfiguration {
 
     let dividerWidth = GalleryConfigurationItem.imageDividerWidth(10)
     let spinnerColor = GalleryConfigurationItem.spinnerColor(UIColor.white)
-    let spinnerStyle = GalleryConfigurationItem.spinnerStyle(UIActivityIndicatorViewStyle.white)
+    let spinnerStyle = GalleryConfigurationItem.spinnerStyle(UIActivityIndicatorView.Style.white)
 
     let closeButton = UIButton(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: 50, height: 50)))
-    closeButton.setImage(UIImage(named: "close_normal"), for: UIControlState.normal)
-    closeButton.setImage(UIImage(named: "close_highlighted"), for: UIControlState.highlighted)
+    closeButton.setImage(UIImage(named: "close_normal"), for: UIControl.State.normal)
+    closeButton.setImage(UIImage(named: "close_highlighted"), for: UIControl.State.highlighted)
     let closeButtonConfig = GalleryConfigurationItem.closeButton(closeButton)
 
     let seeAllButton = UIButton(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: 100, height: 50)))

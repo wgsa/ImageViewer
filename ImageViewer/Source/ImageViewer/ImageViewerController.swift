@@ -139,8 +139,8 @@ public final class ImageViewerController: UIViewController, UIScrollViewDelegate
         
         let closeButtonAssets = configuration.closeButtonAssets
         
-        closeButton.setImage(closeButtonAssets.normal, for: UIControlState.normal)
-        closeButton.setImage(closeButtonAssets.highlighted, for: UIControlState.highlighted)
+        closeButton.setImage(closeButtonAssets.normal, for: UIControl.State.normal)
+        closeButton.setImage(closeButtonAssets.highlighted, for: UIControl.State.highlighted)
         closeButton.alpha = 0.0
         closeButton.addTarget(self, action: #selector(ImageViewerController.close(_:)), for: .touchUpInside)
     }
@@ -177,7 +177,7 @@ public final class ImageViewerController: UIViewController, UIScrollViewDelegate
         
         scrollView.addObserver(self, forKeyPath: "contentOffset", options: NSKeyValueObservingOptions.new, context: nil)
         scrollView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        scrollView.decelerationRate = 0.5
+        scrollView.decelerationRate = UIScrollView.DecelerationRate(rawValue: 0.5)
         scrollView.contentInset = UIEdgeInsets.zero
         scrollView.contentOffset = CGPoint.zero
         scrollView.contentSize = imageView.frame.size
@@ -296,9 +296,9 @@ public final class ImageViewerController: UIViewController, UIScrollViewDelegate
             
             if finished {
                 if isPortraitOnly() {
-                    NotificationCenter.default.addObserver(self, selector: #selector(ImageViewerController.rotate), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+                    NotificationCenter.default.addObserver(self, selector: #selector(ImageViewerController.rotate), name: UIDevice.orientationDidChangeNotification, object: nil)
                 }
-                self.applicationWindow!.windowLevel = UIWindowLevelStatusBar + 1
+                self.applicationWindow!.windowLevel = UIWindow.Level.statusBar + 1
                 
                 self.scrollView.addSubview(self.imageView)
                 self.imageProvider.provideImage { [weak self] image in
@@ -336,7 +336,7 @@ public final class ImageViewerController: UIViewController, UIScrollViewDelegate
             completion?(finished)
             if finished {
                 NotificationCenter.default.removeObserver(self)
-                self.applicationWindow!.windowLevel = UIWindowLevelNormal
+                self.applicationWindow!.windowLevel = UIWindow.Level.normal
                 
                 self.displacedView.isHidden = false
                 self.isAnimating = false
@@ -351,12 +351,12 @@ public final class ImageViewerController: UIViewController, UIScrollViewDelegate
         
         /// In units of "vertical velocity". for example if we have a vertical velocity of 50 units (which are points really) per second
         /// and the distance to travel is 175 units, then our spring velocity is 3.5. I.e. we will travel 3.5 units in 1 second.
-        let springVelocity = fabs(verticalVelocity / (targetOffset - verticalTouchPoint))
+        let springVelocity = abs(verticalVelocity / (targetOffset - verticalTouchPoint))
         
         /// How much time it will take to travel the remaining distance given the above speed.
-        let expectedDuration = TimeInterval( fabs(targetOffset - verticalTouchPoint) / fabs(verticalVelocity))
+        let expectedDuration = TimeInterval( abs(targetOffset - verticalTouchPoint) / abs(verticalVelocity))
         
-        UIView.animate(withDuration: expectedDuration, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: springVelocity, options: UIViewAnimationOptions.curveLinear, animations: { () -> Void in
+        UIView.animate(withDuration: expectedDuration, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: springVelocity, options: UIView.AnimationOptions.curveLinear, animations: { () -> Void in
             self.scrollView.setContentOffset(CGPoint(x: 0, y: targetOffset), animated: false)
             
             }, completion: { (finished) -> Void in
@@ -388,7 +388,7 @@ public final class ImageViewerController: UIViewController, UIScrollViewDelegate
             }, completion: { (finished) -> Void in
                 
                 if finished {
-                    self.applicationWindow!.windowLevel = UIWindowLevelStatusBar + 1
+                    self.applicationWindow!.windowLevel = UIWindow.Level.statusBar + 1
                     
                     self.isAnimating = false
                     self.isSwipingToDismiss = false
@@ -444,7 +444,7 @@ public final class ImageViewerController: UIViewController, UIScrollViewDelegate
         switch recognizer.state {
             
         case .began:
-            applicationWindow!.windowLevel = UIWindowLevelNormal
+            applicationWindow!.windowLevel = UIWindow.Level.normal
             fallthrough
             
         case .changed:
@@ -500,8 +500,8 @@ public final class ImageViewerController: UIViewController, UIScrollViewDelegate
             
             let distanceToEdge = (scrollView.bounds.height / 2) + (imageView.bounds.height / 2)
             
-            overlayView.alpha = 1 - fabs(scrollView.contentOffset.y / distanceToEdge)
-            closeButton.alpha = 1 - fabs(scrollView.contentOffset.y / distanceToEdge) * transparencyMultiplier
+            overlayView.alpha = 1 - abs(scrollView.contentOffset.y / distanceToEdge)
+            closeButton.alpha = 1 - abs(scrollView.contentOffset.y / distanceToEdge) * transparencyMultiplier
             
             let newY = CGFloat(closeButtonPadding) - abs(scrollView.contentOffset.y / distanceToEdge) * velocityMultiplier
             closeButton.frame = CGRect(origin: CGPoint(x: closeButton.frame.origin.x, y: newY), size: closeButton.frame.size)

@@ -44,7 +44,7 @@ class CounterView: UIView {
         let stringTemplate = "%d of %d"
         let countString = String(format: stringTemplate, arguments: [currentIndex + 1, count])
         
-        countLabel.attributedText = NSAttributedString(string: countString, attributes: [NSFontAttributeName: UIFont.boldSystemFont(ofSize: 17), NSForegroundColorAttributeName: UIColor.white])
+        countLabel.attributedText = NSAttributedString(string: countString, attributes: convertToOptionalNSAttributedStringKeyDictionary([convertFromNSAttributedStringKey(NSAttributedString.Key.font): UIFont.boldSystemFont(ofSize: 17), convertFromNSAttributedStringKey(NSAttributedString.Key.foregroundColor): UIColor.white]))
     }
     
     override func layoutSubviews() {
@@ -52,4 +52,15 @@ class CounterView: UIView {
         
         countLabel.frame = self.bounds
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromNSAttributedStringKey(_ input: NSAttributedString.Key) -> String {
+	return input.rawValue
 }

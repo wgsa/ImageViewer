@@ -39,7 +39,7 @@ final public class GalleryViewController : UIPageViewController, UIViewControlle
     fileprivate let configuration: GalleryConfiguration
     fileprivate var spinnerColor = UIColor.white
     fileprivate var backgroundColor = UIColor.black
-    fileprivate var spinnerStyle = UIActivityIndicatorViewStyle.white
+    fileprivate var spinnerStyle = UIActivityIndicatorView.Style.white
     fileprivate let presentTransitionDuration = 0.25
     fileprivate let dismissTransitionDuration = 1.00
     fileprivate let closeButtonPadding: CGFloat = 8.0
@@ -109,7 +109,7 @@ final public class GalleryViewController : UIPageViewController, UIViewControlle
         
         self.closeTransition = GalleryCloseTransition(duration: dismissTransitionDuration)
         
-        super.init(transitionStyle: UIPageViewControllerTransitionStyle.scroll, navigationOrientation: UIPageViewControllerNavigationOrientation.horizontal, options: [UIPageViewControllerOptionInterPageSpacingKey : NSNumber(value: dividerWidth)])
+        super.init(transitionStyle: UIPageViewController.TransitionStyle.scroll, navigationOrientation: UIPageViewController.NavigationOrientation.horizontal, options: convertToOptionalUIPageViewControllerOptionsKeyDictionary([convertFromUIPageViewControllerOptionsKey(UIPageViewController.OptionsKey.interPageSpacing) : NSNumber(value: dividerWidth)]))
         
         self.imageControllerFactory = ImageViewControllerFactory(imageProvider: imageProvider, displacedView: displacedView, imageCount: imageCount, startIndex: startIndex, configuration: configuration, fadeInHandler: fadeInHandler, delegate: self)
         
@@ -121,11 +121,11 @@ final public class GalleryViewController : UIPageViewController, UIViewControlle
         self.transitioningDelegate = self
         self.modalPresentationStyle = .custom
         self.extendedLayoutIncludesOpaqueBars = true
-        self.applicationWindow?.windowLevel = (statusBarHidden) ? UIWindowLevelStatusBar + 1 : UIWindowLevelNormal
+        self.applicationWindow?.windowLevel = (statusBarHidden) ? UIWindow.Level.statusBar + 1 : UIWindow.Level.normal
         
         configureInitialImageController()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(GalleryViewController.rotate), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(GalleryViewController.rotate), name: UIDevice.orientationDidChangeNotification, object: nil)
         
         self.landedPageAtIndexCompletion?(self.currentIndex)
     }
@@ -166,7 +166,7 @@ final public class GalleryViewController : UIPageViewController, UIViewControlle
         
         let overlayView = applyOverlayView()
         
-        UIView.animate(withDuration: rotationAnimationDuration, delay: 0, options: UIViewAnimationOptions.curveLinear, animations: { [weak self] () -> Void in
+        UIView.animate(withDuration: rotationAnimationDuration, delay: 0, options: UIView.AnimationOptions.curveLinear, animations: { [weak self] () -> Void in
             
             self?.view.transform = rotationTransform()
             self?.view.bounds = rotationAdjustedBounds()
@@ -186,7 +186,7 @@ final public class GalleryViewController : UIPageViewController, UIViewControlle
     func configureInitialImageController() {
         
         let initialImageController = self.imageControllerFactory.createImageViewController(startIndex)
-        self.setViewControllers([initialImageController], direction: UIPageViewControllerNavigationDirection.forward, animated: false, completion: nil)
+        self.setViewControllers([initialImageController], direction: UIPageViewController.NavigationDirection.forward, animated: false, completion: nil)
         initialImageController.view.isHidden = false
         
         self.presentTransition.completion = { [weak self] in
@@ -399,7 +399,7 @@ final public class GalleryViewController : UIPageViewController, UIViewControlle
         guard currentIndex != index && index >= 0 && index < imageCount else { return }
 
         let imageViewController = self.imageControllerFactory.createImageViewController(index)
-        let direction: UIPageViewControllerNavigationDirection = index > currentIndex ? .forward : .reverse
+        let direction: UIPageViewController.NavigationDirection = index > currentIndex ? .forward : .reverse
 
         // workaround to make UIPageViewController happy
         if direction == .forward {
@@ -453,7 +453,7 @@ final public class GalleryViewController : UIPageViewController, UIViewControlle
         self.modalTransitionStyle = .crossDissolve
         self.dismiss(animated: false) {
             
-            self.applicationWindow!.windowLevel = UIWindowLevelNormal
+            self.applicationWindow!.windowLevel = UIWindow.Level.normal
             completion?()
         }
     }
@@ -497,4 +497,15 @@ final public class GalleryViewController : UIPageViewController, UIViewControlle
         self.headerView?.sizeToFit()
         self.footerView?.sizeToFit()
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalUIPageViewControllerOptionsKeyDictionary(_ input: [String: Any]?) -> [UIPageViewController.OptionsKey: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIPageViewController.OptionsKey(rawValue: key), value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIPageViewControllerOptionsKey(_ input: UIPageViewController.OptionsKey) -> String {
+	return input.rawValue
 }
